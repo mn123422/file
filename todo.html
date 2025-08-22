@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Illoom Todos</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    #app { width: 800px; 
+      margin: 0 auto; }
+
+    header, nav, footer { height: 50px; 
+      line-height: 50px; }
+
+    header { background-color: rgb(151, 151, 151); 
+      text-align: center; color: white; font-weight: bold; }
+
+    nav { background-color: rgb(55, 55, 55); }
+
+    nav ul { margin: 0; padding: 0; 
+      overflow: hidden; }
+
+    nav>ul>li { width: 100px; list-style: none; 
+      float: left; }
+
+    nav>ul>li>a { color: white; text-align: center; 
+      text-decoration: none; display: block; }
+
+    nav>ul>li>a:hover { font-weight: bold; 
+      background-color: rgb(100, 100, 100); }
+
+    main { overflow: hidden; }
+
+    aside { width: 100px;
+        height: 600px;
+        float: left;
+       
+        line-height: 200px;
+        text-align: center; }
+
+        aside:first-of-type {
+       background-color: rgb(168, 168, 168); 
+}
+ aside:last-of-type {
+       background-color: rgb(169, 169, 169); 
+}
+
+    section { width: 600px; float: left; 
+      min-height: 600px; 
+      background-color: rgb(194, 194, 194); 
+      padding: 20px; }
+
+    footer { background-color: rgb(124, 122, 122); 
+      text-align: center; 
+      color: white; }
+
+    .finish { text-decoration: l
+      ine-through; font-style: italic; }
+
+    .hidden { display: none; } 
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header>Illoom Todos</header>
+    <nav>
+      <ul>
+        <li><a href="#" >I am</a></li>
+        <li><a href="#" >Favorite</a></li>
+        <li><a href="#" onclick="showPage('list')">List</a></li>
+        <li><a href="#" onclick="showPage('shop')">Shop</a></li>
+        <li><a href="#" onclick="showPage('mypage')">My Page</a></li>
+        <li><a href="#" onclick="showPage('digging')">Digging</a></li>
+        <li><a href="#" onclick="showPage('out')">Out</a></li>
+      </ul>
+    </nav>
+    <main>
+      <aside></aside>
+      
+      <section>
+        
+        <div></div>
+        <div ></div>
+        <div></div>
+        <div></div>
+        <div ></div>
+        <div ></div>
+
+       
+        <div id="out" class="content hidden">
+          <h3 class="mb-4">📋 할 일 관리</h3>
+          <div class="mt-3 mb-3">
+            <label class="form-label">할일</label>
+            <input type="text" class="form-control" id="title">
+          </div>
+          <div class="mt-3 mb-3">
+            <label class="form-label">마감일</label>
+            <input type="date" class="form-control" id="deadline">
+          </div>
+          <div class="d-grid mt-3 mb-3">
+            <button class="btn btn-outline-primary" onclick="추가();">추가</button>
+          </div>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>할일</th>
+                <th>마감일</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </section>
+      
+      <aside></aside>
+    </main>
+    <footer>COPYRIGHT &copy; 2025 Illoom</footer>
+  </div>
+
+  <script>
+    
+    function showPage(id) {
+      document.querySelectorAll('.content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+   
+    let tno = 1;
+    const todos = [];
+    const $title = document.getElementById('title');
+    const $deadline = document.getElementById('deadline');
+    const $tbody = document.getElementById('tbody');
+
+    function 추가(){
+      const title = $title.value.trim();
+      const deadline = $deadline.value;
+      if(!title) { alert("할 일을 입력하세요!"); return; }
+      const todo = { tno, title, deadline, finish:false };
+      todos.push(todo);
+      tno++;
+      출력();
+      $title.value = "";
+      $deadline.value = "";
+    }
+
+    function 출력(){
+      let html = '';
+      for(const todo of todos) {
+        html += `
+          <tr>
+            <td onclick='변경(${todo.tno})' class='${todo.finish?"finish":""}'>
+              ${todo.title} ${todo.finish?"(완료)":""}
+            </td>
+            <td class='${todo.finish?"finish":""}'>${todo.deadline}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" onclick="삭제(${todo.tno})">삭제</button>
+            </td>
+          </tr>`;
+      }
+      $tbody.innerHTML = html;
+    }
+
+    function 변경(tno) {
+      for(const todo of todos) {
+        if(todo.tno === tno){
+          todo.finish = !todo.finish;
+        }
+      }
+      출력();
+    }
+
+    function 삭제(tno) {
+      for(let i=0; i<todos.length; i++){
+        if(todos[i].tno === tno){
+          todos.splice(i,1);
+          break;
+        }
+      }
+      출력();
+    }
+  </script>
+</body>
+</html>
